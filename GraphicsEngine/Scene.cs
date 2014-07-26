@@ -2,8 +2,14 @@
 
 namespace GraphicsEngine
 {
+    /// <summary>
+    /// Scene Graph.
+    /// </summary>
     public class Scene
     {
+        /// <summary>
+        /// Initializes a new Instance of current Class.
+        /// </summary>
         public Scene()
         {
         }
@@ -13,8 +19,6 @@ namespace GraphicsEngine
         #endregion
 
         #region Fields
-
-        private SceneNode root = null;
 
         #endregion
     }

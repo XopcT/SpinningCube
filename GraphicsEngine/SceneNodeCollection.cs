@@ -34,6 +34,11 @@ namespace GraphicsEngine
             return this.nodes.Contains(item);
         }
 
+        /// <summary>
+        /// Copies Nodes to the specified Array.
+        /// </summary>
+        /// <param name="array">Target Array.s</param>
+        /// <param name="arrayIndex">Index to start copying from.</param>
         public void CopyTo(SceneNode[] array, int arrayIndex)
         {
             this.nodes.CopyTo(array, arrayIndex);
@@ -49,11 +54,19 @@ namespace GraphicsEngine
             return this.nodes.Remove(item);
         }
 
+        /// <summary>
+        /// Retrieves an Object to iterate over the Collection.
+        /// </summary>
+        /// <returns>Object to iterate over the Collection.</returns>
         public IEnumerator<SceneNode> GetEnumerator()
         {
             return this.nodes.GetEnumerator();
         }
 
+        /// <summary>
+        /// Retrieves an Object to iterate over the Collection.
+        /// </summary>
+        /// <returns>Object to iterate over the Collection.</returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return this.nodes.GetEnumerator();

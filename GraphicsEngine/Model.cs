@@ -9,12 +9,12 @@ namespace GraphicsEngine
         /// <summary>
         /// Sets/retrieves Buffer of Model Vertices.
         /// </summary>
-        public object VertexBuffer { get; set; }
+        public VertexBuffer VertexBuffer { get; set; }
 
         /// <summary>
         /// Sets/retrieves Buffer of Model Indices.
         /// </summary>
-        public object IndexBuffer { get; set; }
+        public IndexBuffer IndexBuffer { get; set; }
 
         /// <summary>
         /// Sets/retrieves an Effect to render the Model.
