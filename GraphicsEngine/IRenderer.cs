@@ -20,5 +20,11 @@ namespace GraphicsEngine
         /// <param name="scene">Scene to render.</param>
         /// <param name="elapsedTime">Time elapsed since previous Frame.</param>
         void Render(Scene scene, TimeSpan elapsedTime);
+
+        /// <summary>
+        /// Retrieves the Renderer's Back Buffer.
+        /// </summary>
+        /// <returns>Back Buffer.</returns>
+        object GetBackBuffer();
     }
 }

@@ -11,7 +11,16 @@ namespace GraphicsEngine
         /// <summary>
         /// Begins Frame Rendering.
         /// </summary>
-        void BeginFrame();
+        /// <param name="color">Color to fill the Frame.</param>
+        void BeginFrame(int color);
+
+        /// <summary>
+        /// Begins Frame Rendering.
+        /// </summary>
+        /// <param name="color">Color to fill the Frame.</param>
+        /// <param name="depth">Value to fill the Depth.</param>
+        /// <param name="stencil">Value to fill the Stencil.</param>
+        void BeginFrame(int color, float depth, int stencil);
 
         /// <summary>
         /// Ends Frame Rendering.

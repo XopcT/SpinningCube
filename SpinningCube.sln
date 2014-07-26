@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpinningCube", "SpinningCub
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphicsEngine", "GraphicsEngine\GraphicsEngine.csproj", "{DC58E8CB-7821-432A-8851-FA82DF728B6A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectX.Wpf", "DirectX.Wpf\DirectX.Wpf.csproj", "{D76DF4C0-67FF-490E-A6F9-A1A37C9FEF92}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{DC58E8CB-7821-432A-8851-FA82DF728B6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC58E8CB-7821-432A-8851-FA82DF728B6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC58E8CB-7821-432A-8851-FA82DF728B6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D76DF4C0-67FF-490E-A6F9-A1A37C9FEF92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D76DF4C0-67FF-490E-A6F9-A1A37C9FEF92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D76DF4C0-67FF-490E-A6F9-A1A37C9FEF92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D76DF4C0-67FF-490E-A6F9-A1A37C9FEF92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DC58E8CB-7821-432A-8851-FA82DF728B6A}</ProjectGuid>
+    <ProjectGuid>{D76DF4C0-67FF-490E-A6F9-A1A37C9FEF92}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GraphicsEngine</RootNamespace>
-    <AssemblyName>GraphicsEngine</AssemblyName>
+    <RootNamespace>DirectX.Wpf</RootNamespace>
+    <AssemblyName>DirectX.Wpf</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -20,7 +20,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\GraphicsEngine.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,39 +30,40 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SharpDX">
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="SharpDX, Version=2.6.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SharpDXPackageBinDir)\SharpDX.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Direct3D9">
+    <Reference Include="SharpDX.Direct3D9, Version=2.6.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SharpDXPackageBinDir)\SharpDX.Direct3D9.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Direct3D9\ContentManager.cs" />
-    <Compile Include="Direct3D9\GraphicsDevice.cs" />
-    <Compile Include="Direct3D9\ForwardRenderer.cs" />
-    <Compile Include="Direct3D9\VertexBuffer.cs" />
-    <Compile Include="IContentManager.cs" />
-    <Compile Include="IGraphicsDevice.cs" />
-    <Compile Include="IndexBuffer.cs" />
-    <Compile Include="IRenderer.cs" />
-    <Compile Include="Model.cs" />
-    <Compile Include="SceneNodeCollection.cs" />
+    <Compile Include="Direct3D9ImageSource.cs" />
+    <Compile Include="Direct3DImageSource.cs" />
+    <Compile Include="DirectXHost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RendererFactory.cs" />
-    <Compile Include="Scene.cs" />
-    <Compile Include="SceneNode.cs" />
-    <Compile Include="VertexBuffer.cs" />
-    <Compile Include="VertexPositionColor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GraphicsEngine\GraphicsEngine.csproj">
+      <Project>{dc58e8cb-7821-432a-8851-fa82df728b6a}</Project>
+      <Name>GraphicsEngine</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

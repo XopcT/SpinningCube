@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using D3D9 = SharpDX.Direct3D9;
 
 namespace GraphicsEngine.Direct3D9
@@ -17,20 +18,31 @@ namespace GraphicsEngine.Direct3D9
             D3D9.PresentParameters presentParams = new D3D9.PresentParameters();
             presentParams.Windowed = true;
             presentParams.SwapEffect = D3D9.SwapEffect.Discard;
-            presentParams.DeviceWindowHandle = handle;
             presentParams.PresentationInterval = D3D9.PresentInterval.Default;
+            presentParams.DeviceWindowHandle = handle;
 
-            this.context = new D3D9.Direct3DEx();
-            this.device = new D3D9.DeviceEx(this.context, 0, D3D9.DeviceType.Hardware, IntPtr.Zero,
-                D3D9.CreateFlags.HardwareVertexProcessing | D3D9.CreateFlags.Multithreaded | D3D9.CreateFlags.FpuPreserve,
-                presentParams);
+            this.context = new D3D9.Direct3D();
+            this.device = new D3D9.Device(this.context, 0, D3D9.DeviceType.Hardware, IntPtr.Zero, D3D9.CreateFlags.HardwareVertexProcessing, presentParams);
         }
 
         /// <summary>
         /// Begins Frame Rendering.
         /// </summary>
-        public void BeginFrame()
+        /// <param name="color">Color to fill the Frame.</param>
+        public void BeginFrame(int color)
         {
+            this.BeginFrame(color, 1.0f, 0);
+        }
+
+        /// <summary>
+        /// Begins Frame Rendering.
+        /// </summary>
+        /// <param name="color">Color to fill the Frame.</param>
+        /// <param name="depth">Value to fill the Depth.</param>
+        /// <param name="stencil">Value to fill the Stencil.</param>
+        public void BeginFrame(int color, float depth, int stencil)
+        {
+            this.device.Clear(D3D9.ClearFlags.Target, SharpDX.ColorBGRA.FromRgba(color), depth, stencil);
             this.device.BeginScene();
         }
 
@@ -123,8 +135,8 @@ namespace GraphicsEngine.Direct3D9
         #endregion
 
         #region Fields
-        private D3D9.Direct3DEx context = null;
-        private D3D9.DeviceEx device = null;
+        private D3D9.Direct3D context = null;
+        private D3D9.Device device = null;
 
         #endregion
     }

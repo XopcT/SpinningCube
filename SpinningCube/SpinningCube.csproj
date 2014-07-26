@@ -106,6 +106,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DirectX.Wpf\DirectX.Wpf.csproj">
+      <Project>{d76df4c0-67ff-490e-a6f9-a1a37c9fef92}</Project>
+      <Name>DirectX.Wpf</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GraphicsEngine\GraphicsEngine.csproj">
       <Project>{dc58e8cb-7821-432a-8851-fa82df728b6a}</Project>
       <Name>GraphicsEngine</Name>

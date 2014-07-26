@@ -16,6 +16,7 @@ namespace GraphicsEngine.Direct3D9
         {
             if (device == null)
                 throw new ArgumentNullException("device");
+            this.device = device;
         }
 
         /// <summary>
@@ -25,13 +26,18 @@ namespace GraphicsEngine.Direct3D9
         /// <param name="height">Height of the Viewport.</param>
         public void Reset(int width, int height)
         {
-            // Validating new Size of the Viewport:
-            if (width < 1) throw new ArgumentOutOfRangeException("width");
-            if (height < 1) throw new ArgumentOutOfRangeException("height");
-            // Resetting the Render Target:
-            if (this.renderTarget != null)
-                this.renderTarget.Dispose();
-            this.renderTarget = (Texture)this.device.CreateRenderTargetTexture(width, height);
+            lock (this.rendererLock)
+            {
+                // Validating new Size of the Viewport:
+                if (width < 1) throw new ArgumentOutOfRangeException("width");
+                if (height < 1) throw new ArgumentOutOfRangeException("height");
+                // Disposing previous Render Target:
+                if (this.renderTarget != null)
+                    this.renderTarget.Dispose();
+                // Setting new Render Target:
+                this.renderTarget = (Texture)this.device.CreateRenderTargetTexture(width, height);
+                this.device.SetRenderTarget(0, this.renderTarget.GetSurfaceLevel(0));
+            }
         }
 
         /// <summary>
@@ -41,9 +47,17 @@ namespace GraphicsEngine.Direct3D9
         /// <param name="elapsedTime">Time elapsed since previous Frame.</param>
         public void Render(Scene scene, TimeSpan elapsedTime)
         {
-            this.device.BeginFrame();
+            lock (this.rendererLock)
+            {
+                this.device.BeginFrame(SharpDX.Color.CornflowerBlue.ToRgba());
 
-            this.device.EndFrame();
+                this.device.EndFrame();
+            }
+        }
+
+        public object GetBackBuffer()
+        {
+            return this.renderTarget;
         }
 
         /// <summary>
@@ -67,6 +81,7 @@ namespace GraphicsEngine.Direct3D9
         private IGraphicsDevice device = null;
         private Texture renderTarget = null;
 
+        private object rendererLock = new object();
         #endregion
     }
 }

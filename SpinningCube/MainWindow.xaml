@@ -1,8 +1,9 @@
 ﻿<Window x:Class="SpinningCube.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dx="clr-namespace:DirectX.Wpf;assembly=DirectX.Wpf"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <dx:DirectXHost />
     </Grid>
 </Window>
