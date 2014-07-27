@@ -17,6 +17,7 @@ namespace DirectX.Wpf
         /// </summary>
         public DirectXHost()
         {
+            this.MouseMove += this.OnMouseMove;
             // TODO Make it possible to set another Type of ImageSource.
             this.Frame = new Direct3D9ImageSource();
             this.Frame.IsFrontBufferAvailableChanged += this.OnFrameIsFrontBufferAvailableChange;
@@ -82,6 +83,9 @@ namespace DirectX.Wpf
             }
         }
 
+        /// <summary>
+        /// Updates the Size of the Viewport.
+        /// </summary>
         private void UpdateSize()
         {
             if (this.Renderer != null)
@@ -154,6 +158,26 @@ namespace DirectX.Wpf
             return new Size(width, height);
         }
 
+        /// <summary>
+        /// Handles moving a Mouse over the Control.
+        /// </summary>
+        private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Point currentMousePosition = e.GetPosition(this);
+            if (this.previousMousePosition.HasValue)
+            {
+                Vector distance = Point.Subtract(currentMousePosition, this.previousMousePosition.Value);
+                if (this.Scene != null)
+                {
+                    this.Scene.OnMouseMove((float)currentMousePosition.X, (float)currentMousePosition.Y,
+                        (float)distance.X, (float)distance.Y,
+                        e.LeftButton == System.Windows.Input.MouseButtonState.Pressed,
+                        e.RightButton == System.Windows.Input.MouseButtonState.Pressed);
+                }
+            }
+            this.previousMousePosition = currentMousePosition;
+        }
+
         #region Properties
 
         /// <summary>
@@ -210,6 +234,8 @@ namespace DirectX.Wpf
         private IRenderer renderer = null;
         private Scene scene = null;
         private Stopwatch timer = new Stopwatch();
+
+        private Point? previousMousePosition = null;
 
         #endregion
     }

@@ -41,7 +41,7 @@ namespace SpinningCube
 
             Scene scene = new Scene();
             scene.Camera = new Camera();
-            scene.Model = renderer.ContentManager.LoadModel(string.Empty);
+            scene.Model = renderer.ContentManager.LoadCube(2.0f);
 
             this.screen.Renderer = renderer;
             this.screen.Scene = scene;

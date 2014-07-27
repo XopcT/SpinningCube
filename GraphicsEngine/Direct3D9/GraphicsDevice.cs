@@ -24,7 +24,6 @@ namespace GraphicsEngine.Direct3D9
 
             this.context = new Direct3D();
             this.device = new Device(this.context, 0, DeviceType.Hardware, handle, CreateFlags.HardwareVertexProcessing | CreateFlags.Multithreaded | CreateFlags.FpuPreserve, presentParams);
-            this.device.SetRenderState(RenderState.CullMode, Cull.None);
         }
 
         /// <summary>

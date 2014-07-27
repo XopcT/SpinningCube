@@ -16,6 +16,29 @@ namespace GraphicsEngine
         }
 
         /// <summary>
+        /// Handles the Mouse Move.
+        /// </summary>
+        /// <param name="absoluteX">Absolute Mouse X.</param>
+        /// <param name="absoluteY">Absolute Mouse Y.</param>
+        /// <param name="dX">Distance the Mouse moved in X-Axis.</param>
+        /// <param name="dY">Distance the Mouse moved in Y-Axis.</param>
+        /// <param name="leftButton">Indicates whether left Mouse Button is pressed.</param>
+        /// <param name="rightButton">Indicates whether right Mouse Button is pressed.</param>
+        public void OnMouseMove(float absoluteX, float absoluteY, float dX, float dY, bool leftButton, bool rightButton)
+        {
+            if (leftButton)
+            {
+                this.scene.Model.RotationY += -dX * sensitivity;
+                this.scene.Model.RotationX += -dY * sensitivity;
+            }
+            if (rightButton)
+            {
+                this.scene.Model.PositionX += dX * sensitivity;
+                this.scene.Model.PositionY += -dY * sensitivity;
+            }
+        }
+
+        /// <summary>
         /// Handles resizing Scene's Viewport.
         /// </summary>
         public void OnViewportResize()
@@ -32,6 +55,7 @@ namespace GraphicsEngine
 
         #region Fields
         private readonly Scene scene = null;
+        private readonly float sensitivity = 1.0f / 20;
 
         #endregion
     }
