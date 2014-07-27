@@ -4,15 +4,15 @@ using SharpDX.Direct3D9;
 namespace GraphicsEngine.Direct3D9
 {
     /// <summary>
-    /// Direct3D 9 Renderer based on Fixed Function Pipeline.
+    /// Forward Shading Renderer based on Direct3D 9.
     /// </summary>
-    public class FfpRenderer : IRenderer
+    public class ForwardRenderer : IRenderer
     {
         /// <summary>
         /// Initializes a new Instance of current Class.
         /// </summary>
         /// <param name="device">Device to render with.</param>
-        public FfpRenderer(IGraphicsDevice device)
+        public ForwardRenderer(IGraphicsDevice device)
         {
             if (device == null)
                 throw new ArgumentNullException("device");
@@ -47,7 +47,7 @@ namespace GraphicsEngine.Direct3D9
             this.device.BeginFrame(SharpDX.Color.CornflowerBlue.ToRgba());
             this.device.SetupCamera(scene.Camera);
             if (scene.Model != null)
-                this.device.DrawModel(scene.Model, null);
+                this.device.DrawModel(scene.Model, scene.Model.Effect);
             this.device.EndFrame();
         }
 

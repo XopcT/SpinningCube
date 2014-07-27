@@ -32,7 +32,7 @@ namespace GraphicsEngine
         /// </summary>
         /// <param name="model">Model to draw.</param>
         /// <param name="effect">Effect to draw Model with.</param>
-        void DrawModel(Model model, object effect);
+        void DrawModel(Model model, EffectBase effect);
 
         /// <summary>
         /// Sets up a Camera to draw with.
@@ -63,6 +63,20 @@ namespace GraphicsEngine
         /// <param name="indices">Indices to create Buffer from.</param>
         /// <returns>Index Buffer Instance.</returns>
         IndexBufferBase CreateIndexBuffer<IndexType>(IEnumerable<IndexType> indices);
+
+        /// <summary>
+        /// Creates Vertex Shader.
+        /// </summary>
+        /// <param name="bytecode">Shader's Bytecode.</param>
+        /// <returns>Vertex Shader Instance.</returns>
+        object CreateVertexShader(object bytecode);
+
+        /// <summary>
+        /// Creates Pixel Shader.
+        /// </summary>
+        /// <param name="bytecode">Shader's Bytecode.</param>
+        /// <returns>Pixel Shader Instance.</returns>
+        object CreatePixelShader(object bytecode);
 
         /// <summary>
         /// Creates a Texture to render to.

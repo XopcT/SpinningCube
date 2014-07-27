@@ -17,6 +17,11 @@ namespace GraphicsEngine
         public IndexBufferBase IndexBuffer { get; set; }
 
         /// <summary>
+        /// Sets/retrieves an Effect to render the Model.
+        /// </summary>
+        public EffectBase Effect { get; set; }
+
+        /// <summary>
         /// Sets/retrieves the X-Coordinate of the Model.
         /// </summary>
         public float PositionX { get; set; }
@@ -46,9 +51,5 @@ namespace GraphicsEngine
         /// </summary>
         public float RotationZ { get; set; }
 
-        /// <summary>
-        /// Sets/retrieves an Effect to render the Model.
-        /// </summary>
-        public object Effect { get; set; }
     }
 }

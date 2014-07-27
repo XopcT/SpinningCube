@@ -19,5 +19,12 @@ namespace GraphicsEngine
         /// <param name="fullName">File to load Model from.</param>
         /// <returns>Loaded Model Instance.</returns>
         Model LoadModel(string fullName);
+
+        /// <summary>
+        /// Loads an Effect from specified Files.
+        /// </summary>
+        /// <param name="fullName">File to load Effect from.</param>
+        /// <returns>Loaded Effect Instance.</returns>
+        EffectBase LoadEffect(string fullName);
     }
 }

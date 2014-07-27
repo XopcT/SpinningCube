@@ -50,9 +50,11 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="Direct3D9\ContentManager.cs" />
+    <Compile Include="Direct3D9\D3D9Effect.cs" />
     <Compile Include="Direct3D9\GraphicsDevice.cs" />
-    <Compile Include="Direct3D9\FfpRenderer.cs" />
+    <Compile Include="Direct3D9\ForwardRenderer.cs" />
     <Compile Include="Direct3D9\D3D9VertexBuffer.cs" />
+    <Compile Include="EffectBase.cs" />
     <Compile Include="IContentManager.cs" />
     <Compile Include="IGraphicsDevice.cs" />
     <Compile Include="IGraphicsFactory.cs" />

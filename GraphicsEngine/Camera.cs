@@ -24,6 +24,21 @@ namespace GraphicsEngine
         public float PositionZ { get; set; }
 
         /// <summary>
+        /// Sets/retrieves the X-Coordinate the Camera looks at.
+        /// </summary>
+        public float TargetX { get; set; }
+
+        /// <summary>
+        /// Sets/retrieves the X-Coordinate the Camera looks at.
+        /// </summary>
+        public float TargetY { get; set; }
+
+        /// <summary>
+        /// Sets/retrieves the X-Coordinate the Camera looks at.
+        /// </summary>
+        public float TargetZ { get; set; }
+
+        /// <summary>
         /// Sets/retrieves the Camera Rotation over the X-Axis.
         /// </summary>
         public float RotationX { get; set; }

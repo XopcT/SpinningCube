@@ -1,19 +1,7 @@
-﻿using GraphicsEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using GraphicsEngine;
+using System.IO;
+using System.Reflection;
 
 namespace SpinningCube
 {
@@ -36,18 +24,19 @@ namespace SpinningCube
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             GraphicsFactory factory = new GraphicsFactory();
-
+            // Creating Renderer:
             IRenderer renderer = factory.CreateRenderer();
 
+            // Creating Scene:
             Scene scene = new Scene();
-            scene.Camera = new Camera();
+            scene.Camera = new Camera() { PositionX = 0.0f, PositionY = 0.0f, PositionZ = -5.0f, Fov = (float)System.Math.PI / 2.0f, NearPlane = 0.5f, FarPlane = 200.0f };
             scene.Model = renderer.ContentManager.LoadCube(2.0f);
+            scene.Model.Effect = renderer.ContentManager.LoadEffect(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Content\\Effect.fx"));
 
+            // Setting up Renderer and Scene to the DirectX Element:
             this.screen.Renderer = renderer;
             this.screen.Scene = scene;
-
         }
-
 
     }
 }

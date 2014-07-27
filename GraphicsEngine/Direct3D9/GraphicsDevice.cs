@@ -61,19 +61,26 @@ namespace GraphicsEngine.Direct3D9
         /// </summary>
         /// <param name="model">Model to draw.</param>
         /// <param name="effect">Effect to draw Model with.</param>
-        public void DrawModel(Model model, object effect)
+        public void DrawModel(Model model, EffectBase effect)
         {
             // Applying Transforms:
             var world = Matrix.RotationYawPitchRoll(model.RotationY, model.RotationX, model.RotationZ)
                 * Matrix.Translation(model.PositionX, model.PositionY, model.PositionZ);
-            this.device.SetTransform(TransformState.World, world);
 
-            // Drawing the Model:
+            // Setting up Shaders:
+            this.device.VertexShader = ((D3D9Effect)effect).VertexShader;
+            this.device.PixelShader = ((D3D9Effect)effect).PixelShader;
+            this.device.SetVertexShaderConstant(0, world * this.view * this.projection);
+
+            // Setting up Vertex Buffer:
             D3D9VertexBuffer vertexBuffer = (D3D9VertexBuffer)model.VertexBuffer;
             this.device.VertexFormat = vertexBuffer.VertexFormat;
-            this.device.SetStreamSource(0, vertexBuffer.Buffer, 0, vertexBuffer.VertexSize);
             this.device.VertexDeclaration = vertexBuffer.VertexDeclaration;
-            // TODO Apply Index Buffer
+            this.device.SetStreamSource(0, vertexBuffer.Buffer, 0, vertexBuffer.VertexSize);
+
+            // TODO Setup Index Buffer
+
+            // Drawing the Model:
             // TODO Draw via DrawIndexedPrimitives
             this.device.DrawPrimitives(PrimitiveType.TriangleList, 0, vertexBuffer.VertexCount / 3);
         }
@@ -85,12 +92,12 @@ namespace GraphicsEngine.Direct3D9
         public void SetupCamera(Camera camera)
         {
             Matrix view = Matrix.LookAtLH(
-                new Vector3(0.0f, 0.0f, -5.0f),
+                new Vector3(camera.PositionX, camera.PositionY, camera.PositionZ),
                 new Vector3(0.0f, 0.0f, 0.0f),
                 Vector3.Up);
             Matrix projection = Matrix.PerspectiveFovLH(camera.Fov, camera.AspectRatio, camera.NearPlane, camera.FarPlane);
-            this.device.SetTransform(TransformState.View, view);
-            this.device.SetTransform(TransformState.Projection, projection);
+            this.view = view;
+            this.projection = projection;
         }
 
         /// <summary>
@@ -164,6 +171,26 @@ namespace GraphicsEngine.Direct3D9
         }
 
         /// <summary>
+        /// Creates Vertex Shader.
+        /// </summary>
+        /// <param name="bytecode">Shader's Bytecode.</param>
+        /// <returns>Vertex Shader Instance.</returns>
+        public object CreateVertexShader(object bytecode)
+        {
+            return new VertexShader((this.device), (ShaderBytecode)bytecode);
+        }
+
+        /// <summary>
+        /// Creates Pixel Shader.
+        /// </summary>
+        /// <param name="bytecode">Shader's Bytecode.</param>
+        /// <returns>Pixel Shader Instance.</returns>
+        public object CreatePixelShader(object bytecode)
+        {
+            return new PixelShader((this.device), (ShaderBytecode)bytecode);
+        }
+
+        /// <summary>
         /// Cleans up Resources.
         /// </summary>
         public void Dispose()
@@ -188,6 +215,8 @@ namespace GraphicsEngine.Direct3D9
         #region Fields
         private Direct3D context = null;
         private Device device = null;
+        private Matrix view = Matrix.Identity;
+        private Matrix projection = Matrix.Identity;
 
         // Vertex Formats:
         private static readonly IDictionary<Type, VertexFormat> VertexFormats = new Dictionary<Type, VertexFormat>()
@@ -214,5 +243,6 @@ namespace GraphicsEngine.Direct3D9
         };
 
         #endregion
+
     }
 }

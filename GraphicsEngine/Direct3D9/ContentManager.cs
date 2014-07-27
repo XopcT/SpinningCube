@@ -1,5 +1,6 @@
-﻿
-using SharpDX;
+﻿using SharpDX;
+using SharpDX.Direct3D9;
+
 namespace GraphicsEngine.Direct3D9
 {
     /// <summary>
@@ -13,6 +14,8 @@ namespace GraphicsEngine.Direct3D9
         /// <param name="device">Graphics Device to load Content for.</param>
         public ContentManager(IGraphicsDevice device)
         {
+            if (device == null)
+                throw new System.ArgumentNullException("device");
             this.device = device;
         }
 
@@ -27,57 +30,74 @@ namespace GraphicsEngine.Direct3D9
             VertexPositionColor[] vertices = new VertexPositionColor[]
             {
                 new VertexPositionColor(-a, -a, -a, 1.0f, 0.0f, 0.0f, 1.0f),    // Near Plane
-                new VertexPositionColor(-a, +a, -a, 0.0f, 1.0f, 0.0f, 1.0f),
-                new VertexPositionColor(+a, +a, -a, 0.0f, 0.0f, 1.0f, 1.0f),
-                new VertexPositionColor(+a, +a, -a, 0.0f, 0.0f, 1.0f, 1.0f),
+                new VertexPositionColor(-a, +a, -a, 1.0f, 0.0f, 0.0f, 1.0f),
+                new VertexPositionColor(+a, +a, -a, 1.0f, 0.0f, 0.0f, 1.0f),
+                new VertexPositionColor(+a, +a, -a, 1.0f, 0.0f, 0.0f, 1.0f),
                 new VertexPositionColor(+a, -a, -a, 1.0f, 0.0f, 0.0f, 1.0f),
                 new VertexPositionColor(-a, -a, -a, 1.0f, 0.0f, 0.0f, 1.0f),
-                new VertexPositionColor(-a, -a, +a, 1.0f, 0.0f, 0.0f, 1.0f),    // Far Plane
-                new VertexPositionColor(+a, -a, +a, 1.0f, 0.0f, 0.0f, 1.0f),
-                new VertexPositionColor(+a, +a, +a, 0.0f, 0.0f, 1.0f, 1.0f),
-                new VertexPositionColor(+a, +a, +a, 0.0f, 0.0f, 1.0f, 1.0f),
+                new VertexPositionColor(-a, -a, +a, 0.0f, 1.0f, 0.0f, 1.0f),    // Far Plane
+                new VertexPositionColor(+a, -a, +a, 0.0f, 1.0f, 0.0f, 1.0f),
+                new VertexPositionColor(+a, +a, +a, 0.0f, 1.0f, 0.0f, 1.0f),
+                new VertexPositionColor(+a, +a, +a, 0.0f, 1.0f, 0.0f, 1.0f),
                 new VertexPositionColor(-a, +a, +a, 0.0f, 1.0f, 0.0f, 1.0f),
-                new VertexPositionColor(-a, -a, +a, 1.0f, 0.0f, 0.0f, 1.0f),
-                new VertexPositionColor(-a, -a, -a, 1.0f, 0.0f, 0.0f, 1.0f),    // Left Plane
                 new VertexPositionColor(-a, -a, +a, 0.0f, 1.0f, 0.0f, 1.0f),
+                new VertexPositionColor(-a, -a, -a, 0.0f, 0.0f, 1.0f, 1.0f),    // Left Plane
+                new VertexPositionColor(-a, -a, +a, 0.0f, 0.0f, 1.0f, 1.0f),
                 new VertexPositionColor(-a, +a, +a, 0.0f, 0.0f, 1.0f, 1.0f),
                 new VertexPositionColor(-a, -a, -a, 0.0f, 0.0f, 1.0f, 1.0f),
-                new VertexPositionColor(-a, +a, +a, 1.0f, 0.0f, 0.0f, 1.0f),
-                new VertexPositionColor(-a, +a, -a, 1.0f, 0.0f, 0.0f, 1.0f), 
-                new VertexPositionColor(+a, +a, -a, 1.0f, 0.0f, 0.0f, 1.0f),    // Right Plane
-                new VertexPositionColor(+a, +a, +a, 1.0f, 0.0f, 0.0f, 1.0f),
-                new VertexPositionColor(+a, -a, -a, 0.0f, 0.0f, 1.0f, 1.0f),
-                new VertexPositionColor(+a, +a, +a, 0.0f, 0.0f, 1.0f, 1.0f),
-                new VertexPositionColor(+a, -a, +a, 0.0f, 1.0f, 0.0f, 1.0f),
-                new VertexPositionColor(+a, -a, -a, 1.0f, 0.0f, 0.0f, 1.0f),
-                new VertexPositionColor(-a, +a, +a, 1.0f, 0.0f, 0.0f, 1.0f),    // Top Plane
-                new VertexPositionColor(+a, +a, +a, 1.0f, 0.0f, 0.0f, 1.0f),
+                new VertexPositionColor(-a, +a, +a, 0.0f, 0.0f, 1.0f, 1.0f),
                 new VertexPositionColor(-a, +a, -a, 0.0f, 0.0f, 1.0f, 1.0f),
-                new VertexPositionColor(+a, +a, +a, 0.0f, 0.0f, 1.0f, 1.0f),
-                new VertexPositionColor(+a, +a, -a, 0.0f, 1.0f, 0.0f, 1.0f),
-                new VertexPositionColor(-a, +a, -a, 1.0f, 0.0f, 0.0f, 1.0f),
-                new VertexPositionColor(-a, -a, -a, 1.0f, 0.0f, 0.0f, 1.0f),    // Bottom Plane
-                new VertexPositionColor(+a, -a, -a, 0.0f, 1.0f, 0.0f, 1.0f),
-                new VertexPositionColor(+a, -a, +a, 0.0f, 0.0f, 1.0f, 1.0f),
-                new VertexPositionColor(-a, -a, -a, 0.0f, 0.0f, 1.0f, 1.0f),
-                new VertexPositionColor(+a, -a, +a, 1.0f, 0.0f, 0.0f, 1.0f),
-                new VertexPositionColor(-a, -a, +a, 1.0f, 0.0f, 0.0f, 1.0f),
+                new VertexPositionColor(+a, +a, -a, 1.0f, 0.0f, 1.0f, 1.0f),    // Right Plane
+                new VertexPositionColor(+a, +a, +a, 1.0f, 0.0f, 1.0f, 1.0f),
+                new VertexPositionColor(+a, -a, -a, 1.0f, 0.0f, 1.0f, 1.0f),
+                new VertexPositionColor(+a, +a, +a, 1.0f, 0.0f, 1.0f, 1.0f),
+                new VertexPositionColor(+a, -a, +a, 1.0f, 0.0f, 1.0f, 1.0f),
+                new VertexPositionColor(+a, -a, -a, 1.0f, 0.0f, 1.0f, 1.0f),
+                new VertexPositionColor(-a, +a, +a, 0.0f, 1.0f, 1.0f, 1.0f),    // Top Plane
+                new VertexPositionColor(+a, +a, +a, 0.0f, 1.0f, 1.0f, 1.0f),
+                new VertexPositionColor(-a, +a, -a, 0.0f, 1.0f, 1.0f, 1.0f),
+                new VertexPositionColor(+a, +a, +a, 0.0f, 1.0f, 1.0f, 1.0f),
+                new VertexPositionColor(+a, +a, -a, 0.0f, 1.0f, 1.0f, 1.0f),
+                new VertexPositionColor(-a, +a, -a, 0.0f, 1.0f, 1.0f, 1.0f),
+                new VertexPositionColor(-a, -a, -a, 1.0f, 1.0f, 0.0f, 1.0f),    // Bottom Plane
+                new VertexPositionColor(+a, -a, -a, 1.0f, 1.0f, 0.0f, 1.0f),
+                new VertexPositionColor(+a, -a, +a, 1.0f, 1.0f, 0.0f, 1.0f),
+                new VertexPositionColor(-a, -a, -a, 1.0f, 1.0f, 0.0f, 1.0f),
+                new VertexPositionColor(+a, -a, +a, 1.0f, 1.0f, 0.0f, 1.0f),
+                new VertexPositionColor(-a, -a, +a, 1.0f, 1.0f, 0.0f, 1.0f),
             };
             return new Model()
             {
-                VertexBuffer = this.device.CreateVertexBuffer(vertices)
+                VertexBuffer = this.device.CreateVertexBuffer(vertices),
             };
         }
 
         /// <summary>
         /// Loads a Model from specified File.
-        /// Actually this one does not load it from File. It just creates a Cube.
         /// </summary>
         /// <param name="fullName">File to load Model from.</param>
         /// <returns>Loaded Model Instance.</returns>
         public Model LoadModel(string fullName)
         {
             throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Loads an Effect from specified Files.
+        /// </summary>
+        /// <param name="fullName">File to load Effect from.</param>
+        /// <returns>Loaded Effect Instance.</returns>
+        public EffectBase LoadEffect(string fullName)
+        {
+            // Compiling Shaders in specified File:
+            ShaderBytecode vertexShaderBytecode = ShaderBytecode.CompileFromFile(fullName, "VS", "vs_2_0");
+            ShaderBytecode pixelShaderBytecode = ShaderBytecode.CompileFromFile(fullName, "PS", "ps_2_0");
+            // Creating Effect:
+            return new D3D9Effect()
+            {
+                VertexShader = (VertexShader)this.device.CreateVertexShader(vertexShaderBytecode),
+                PixelShader = (PixelShader)this.device.CreatePixelShader(pixelShaderBytecode),
+            };
         }
 
         #region Properties
