@@ -36,6 +36,7 @@ namespace SpinningCube
             // Setting up Renderer and Scene to the DirectX Element:
             this.screen.Renderer = renderer;
             this.screen.Scene = scene;
+            this.WindowState = System.Windows.WindowState.Maximized;
         }
 
     }
