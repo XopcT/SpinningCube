@@ -2,8 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:dx="clr-namespace:DirectX.Wpf;assembly=DirectX.Wpf"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
     <Grid>
-        <dx:DirectXHost />
+        <dx:DirectXHost x:Name="screen" />
     </Grid>
 </Window>

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using D3D9 = SharpDX.Direct3D9;
+using System.Linq;
+using SharpDX;
+using SharpDX.Direct3D9;
 
 namespace GraphicsEngine.Direct3D9
 {
@@ -15,14 +16,15 @@ namespace GraphicsEngine.Direct3D9
         /// </summary>
         public GraphicsDevice(IntPtr handle)
         {
-            D3D9.PresentParameters presentParams = new D3D9.PresentParameters();
+            PresentParameters presentParams = new PresentParameters();
             presentParams.Windowed = true;
-            presentParams.SwapEffect = D3D9.SwapEffect.Discard;
-            presentParams.PresentationInterval = D3D9.PresentInterval.Default;
+            presentParams.SwapEffect = SwapEffect.Discard;
+            presentParams.PresentationInterval = PresentInterval.Default;
             presentParams.DeviceWindowHandle = handle;
 
-            this.context = new D3D9.Direct3D();
-            this.device = new D3D9.Device(this.context, 0, D3D9.DeviceType.Hardware, IntPtr.Zero, D3D9.CreateFlags.HardwareVertexProcessing, presentParams);
+            this.context = new Direct3D();
+            this.device = new Device(this.context, 0, DeviceType.Hardware, handle, CreateFlags.HardwareVertexProcessing | CreateFlags.Multithreaded | CreateFlags.FpuPreserve, presentParams);
+            this.device.SetRenderState(RenderState.CullMode, Cull.None);
         }
 
         /// <summary>
@@ -42,7 +44,7 @@ namespace GraphicsEngine.Direct3D9
         /// <param name="stencil">Value to fill the Stencil.</param>
         public void BeginFrame(int color, float depth, int stencil)
         {
-            this.device.Clear(D3D9.ClearFlags.Target, SharpDX.ColorBGRA.FromRgba(color), depth, stencil);
+            this.device.Clear(ClearFlags.Target, ColorBGRA.FromRgba(color), depth, stencil);
             this.device.BeginScene();
         }
 
@@ -62,11 +64,44 @@ namespace GraphicsEngine.Direct3D9
         /// <param name="effect">Effect to draw Model with.</param>
         public void DrawModel(Model model, object effect)
         {
-            VertexBuffer vertexBuffer = (VertexBuffer)model.VertexBuffer;
-            this.device.SetStreamSource(0, (D3D9.VertexBuffer)vertexBuffer.Buffer, 0, vertexBuffer.VertexSize);
-            // TODO Apply Vertex Declaration
-            this.device.Indices = (D3D9.IndexBuffer)model.IndexBuffer.Buffer;
-            this.device.DrawIndexedPrimitive(D3D9.PrimitiveType.TriangleList, 0, 0, vertexBuffer.VertexCount, 0, model.IndexBuffer.PrimitiveCount);
+            // Applying Transforms:
+            var world = Matrix.RotationYawPitchRoll(model.RotationY, model.RotationX, model.RotationZ)
+                * Matrix.Translation(model.PositionX, model.PositionY, model.PositionZ);
+            this.device.SetTransform(TransformState.World, world);
+
+            // Drawing the Model:
+            D3D9VertexBuffer vertexBuffer = (D3D9VertexBuffer)model.VertexBuffer;
+            this.device.VertexFormat = vertexBuffer.VertexFormat;
+            this.device.SetStreamSource(0, vertexBuffer.Buffer, 0, vertexBuffer.VertexSize);
+            this.device.VertexDeclaration = vertexBuffer.VertexDeclaration;
+            // TODO Apply Index Buffer
+            // TODO Draw via DrawIndexedPrimitives
+            this.device.DrawPrimitives(PrimitiveType.TriangleList, 0, vertexBuffer.VertexCount / 3);
+        }
+
+        /// <summary>
+        /// Sets up a Camera to draw with.
+        /// </summary>
+        /// <param name="camera">Camera to draw with.</param>
+        public void SetupCamera(Camera camera)
+        {
+            Matrix view = Matrix.LookAtLH(
+                new Vector3(0.0f, 0.0f, -5.0f),
+                new Vector3(0.0f, 0.0f, 0.0f),
+                Vector3.Up);
+            Matrix projection = Matrix.PerspectiveFovLH(camera.Fov, camera.AspectRatio, camera.NearPlane, camera.FarPlane);
+            this.device.SetTransform(TransformState.View, view);
+            this.device.SetTransform(TransformState.Projection, projection);
+        }
+
+        /// <summary>
+        /// Sets render Target to the Device.
+        /// </summary>
+        /// <param name="index">Index of the Render Target.</param>
+        /// <param name="surface">Render Target Instance.</param>
+        public void SetRenderTarget(int index, object surface)
+        {
+            this.device.SetRenderTarget(0, (Surface)surface);
         }
 
         /// <summary>
@@ -75,9 +110,36 @@ namespace GraphicsEngine.Direct3D9
         /// <typeparam name="VertexType">Type of Vertices.</typeparam>
         /// <param name="vertices">Vertices to create Buffer from.</param>
         /// <returns>Vertex Buffer Instance.</returns>
-        public GraphicsEngine.VertexBuffer CreateVertexBuffer<VertexType>(IEnumerable<VertexType> vertices)
+        public GraphicsEngine.VertexBufferBase CreateVertexBuffer<VertexType>(IEnumerable<VertexType> vertices)
+            where VertexType : IVertex
         {
-            throw new NotImplementedException();
+            if (!vertices.Any())
+                throw new ArgumentException("vertices");
+
+            // Computing Buffer Parameters:
+            float[] data = vertices.SelectMany(vertex => vertex.Serialize()).ToArray();
+            Type vertexType = typeof(VertexType);
+            int vertexCount = vertices.Count();
+            int vertexSize = vertices.First().GetSize();
+            int bufferSize = vertexSize * vertexCount;
+            VertexFormat vertexFormat = VertexFormats[vertexType];
+            VertexDeclaration vertexDeclaration = new VertexDeclaration(this.device, VertexElements[vertexType]);
+
+            // Creating Vertex Buffer:
+            VertexBuffer buffer = new VertexBuffer(this.device, bufferSize, Usage.None, VertexFormat.Position, Pool.Default);
+
+            // Filling Buffer with Data:
+            DataStream stream = buffer.Lock(0, 0, LockFlags.Discard);
+            stream.WriteRange(data);
+            buffer.Unlock();
+            return new D3D9VertexBuffer()
+            {
+                VertexSize = vertexSize,
+                VertexCount = vertexCount,
+                Buffer = buffer,
+                VertexFormat = vertexFormat,
+                VertexDeclaration = vertexDeclaration,
+            };
         }
 
         /// <summary>
@@ -86,7 +148,7 @@ namespace GraphicsEngine.Direct3D9
         /// <typeparam name="IndexType">Type of Indices.</typeparam>
         /// <param name="indices">Indices to create Buffer from.</param>
         /// <returns>Index Buffer Instance.</returns>
-        public IndexBuffer CreateIndexBuffer<IndexType>(IEnumerable<IndexType> indices)
+        public IndexBufferBase CreateIndexBuffer<IndexType>(IEnumerable<IndexType> indices)
         {
             throw new NotImplementedException();
         }
@@ -99,17 +161,7 @@ namespace GraphicsEngine.Direct3D9
         /// <returns>Render Target Instance.</returns>
         public object CreateRenderTargetTexture(int width, int height)
         {
-            return new D3D9.Texture(this.device, width, height, 1, D3D9.Usage.RenderTarget, D3D9.Format.A8R8G8B8, D3D9.Pool.Default);
-        }
-
-        /// <summary>
-        /// Sets render Target to the Device.
-        /// </summary>
-        /// <param name="index">Index of the Render Target.</param>
-        /// <param name="surface">Render Target Instance.</param>
-        public void SetRenderTarget(int index, object surface)
-        {
-            this.device.SetRenderTarget(0, (D3D9.Surface)surface);
+            return new Texture(this.device, width, height, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
         }
 
         /// <summary>
@@ -135,8 +187,32 @@ namespace GraphicsEngine.Direct3D9
         #endregion
 
         #region Fields
-        private D3D9.Direct3D context = null;
-        private D3D9.Device device = null;
+        private Direct3D context = null;
+        private Device device = null;
+
+        // Vertex Formats:
+        private static readonly IDictionary<Type, VertexFormat> VertexFormats = new Dictionary<Type, VertexFormat>()
+        {
+            { typeof(VertexPositionColor), VertexFormat.Position | VertexFormat.Diffuse },
+            { typeof(VertexTransformedColored), VertexFormat.PositionRhw | VertexFormat.Diffuse },
+        };
+
+        // Vertex Elements:
+        private static readonly IDictionary<Type, VertexElement[]> VertexElements = new Dictionary<Type, VertexElement[]>()
+        {
+            { typeof(VertexPositionColor), new VertexElement[]
+                {
+                    new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
+                    new VertexElement(0, 12, DeclarationType.Float4, DeclarationMethod.Default, DeclarationUsage.Color, 0),
+                    VertexElement.VertexDeclarationEnd,
+                }},
+            { typeof(VertexTransformedColored), new VertexElement[]
+                {
+                    new VertexElement(0, 0, DeclarationType.Float4, DeclarationMethod.Default, DeclarationUsage.PositionTransformed, 0),
+                    new VertexElement(0, 16, DeclarationType.Float4, DeclarationMethod.Default, DeclarationUsage.Color, 0),
+                    VertexElement.VertexDeclarationEnd,
+                }},
+        };
 
         #endregion
     }

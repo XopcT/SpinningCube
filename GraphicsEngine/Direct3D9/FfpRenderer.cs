@@ -4,15 +4,15 @@ using SharpDX.Direct3D9;
 namespace GraphicsEngine.Direct3D9
 {
     /// <summary>
-    /// Forward Shading Renderer based on Direct3D 9.
+    /// Direct3D 9 Renderer based on Fixed Function Pipeline.
     /// </summary>
-    public class ForwardRenderer : IRenderer
+    public class FfpRenderer : IRenderer
     {
         /// <summary>
         /// Initializes a new Instance of current Class.
         /// </summary>
         /// <param name="device">Device to render with.</param>
-        public ForwardRenderer(IGraphicsDevice device)
+        public FfpRenderer(IGraphicsDevice device)
         {
             if (device == null)
                 throw new ArgumentNullException("device");
@@ -26,18 +26,15 @@ namespace GraphicsEngine.Direct3D9
         /// <param name="height">Height of the Viewport.</param>
         public void Reset(int width, int height)
         {
-            lock (this.rendererLock)
-            {
-                // Validating new Size of the Viewport:
-                if (width < 1) throw new ArgumentOutOfRangeException("width");
-                if (height < 1) throw new ArgumentOutOfRangeException("height");
-                // Disposing previous Render Target:
-                if (this.renderTarget != null)
-                    this.renderTarget.Dispose();
-                // Setting new Render Target:
-                this.renderTarget = (Texture)this.device.CreateRenderTargetTexture(width, height);
-                this.device.SetRenderTarget(0, this.renderTarget.GetSurfaceLevel(0));
-            }
+            // Validating new Size of the Viewport:
+            if (width < 1) throw new ArgumentOutOfRangeException("width");
+            if (height < 1) throw new ArgumentOutOfRangeException("height");
+            // Disposing previous Render Target:
+            if (this.renderTarget != null)
+                this.renderTarget.Dispose();
+            // Setting new Render Target:
+            this.renderTarget = (Texture)this.device.CreateRenderTargetTexture(width, height);
+            this.device.SetRenderTarget(0, this.renderTarget.GetSurfaceLevel(0));
         }
 
         /// <summary>
@@ -47,14 +44,17 @@ namespace GraphicsEngine.Direct3D9
         /// <param name="elapsedTime">Time elapsed since previous Frame.</param>
         public void Render(Scene scene, TimeSpan elapsedTime)
         {
-            lock (this.rendererLock)
-            {
-                this.device.BeginFrame(SharpDX.Color.CornflowerBlue.ToRgba());
-
-                this.device.EndFrame();
-            }
+            this.device.BeginFrame(SharpDX.Color.CornflowerBlue.ToRgba());
+            this.device.SetupCamera(scene.Camera);
+            if (scene.Model != null)
+                this.device.DrawModel(scene.Model, null);
+            this.device.EndFrame();
         }
 
+        /// <summary>
+        /// Retrieves the Renderer's Back Buffer.
+        /// </summary>
+        /// <returns>Back Buffer.</returns>
         public object GetBackBuffer()
         {
             return this.renderTarget;
@@ -75,13 +75,18 @@ namespace GraphicsEngine.Direct3D9
 
         #region Properties
 
+        /// <summary>
+        /// Sets/retrieves a Content Manager.
+        /// </summary>
+        public IContentManager ContentManager { get; set; }
+
         #endregion
 
         #region Fields
         private IGraphicsDevice device = null;
         private Texture renderTarget = null;
 
-        private object rendererLock = new object();
         #endregion
+
     }
 }

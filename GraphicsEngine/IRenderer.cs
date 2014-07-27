@@ -26,5 +26,10 @@ namespace GraphicsEngine
         /// </summary>
         /// <returns>Back Buffer.</returns>
         object GetBackBuffer();
+
+        /// <summary>
+        /// Retrieves a Content Manager.
+        /// </summary>
+        IContentManager ContentManager { get; }
     }
 }

@@ -48,22 +48,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Camera.cs" />
     <Compile Include="Direct3D9\ContentManager.cs" />
     <Compile Include="Direct3D9\GraphicsDevice.cs" />
-    <Compile Include="Direct3D9\ForwardRenderer.cs" />
-    <Compile Include="Direct3D9\VertexBuffer.cs" />
+    <Compile Include="Direct3D9\FfpRenderer.cs" />
+    <Compile Include="Direct3D9\D3D9VertexBuffer.cs" />
     <Compile Include="IContentManager.cs" />
     <Compile Include="IGraphicsDevice.cs" />
-    <Compile Include="IndexBuffer.cs" />
+    <Compile Include="IGraphicsFactory.cs" />
+    <Compile Include="IndexBufferBase.cs" />
     <Compile Include="IRenderer.cs" />
+    <Compile Include="IVertex.cs" />
     <Compile Include="Model.cs" />
+    <Compile Include="SceneController.cs" />
     <Compile Include="SceneNodeCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RendererFactory.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="SceneNode.cs" />
-    <Compile Include="VertexBuffer.cs" />
+    <Compile Include="VertexBufferBase.cs" />
     <Compile Include="VertexPositionColor.cs" />
+    <Compile Include="VertexTransformedColored.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

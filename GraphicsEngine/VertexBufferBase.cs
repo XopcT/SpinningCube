@@ -2,16 +2,11 @@
 namespace GraphicsEngine
 {
     /// <summary>
-    /// Buffer containing Model's Vertices.
+    /// Base Class for Vertex Buffers.
     /// </summary>
-    public class VertexBuffer
+    public abstract class VertexBufferBase
     {
         #region Properties
-
-        /// <summary>
-        /// Sets/retrieves the Buffer Instance.
-        /// </summary>
-        public object Buffer { get; set; }
 
         /// <summary>
         /// Sets/retrieves the Size of a single Vector.

@@ -35,6 +35,12 @@ namespace GraphicsEngine
         void DrawModel(Model model, object effect);
 
         /// <summary>
+        /// Sets up a Camera to draw with.
+        /// </summary>
+        /// <param name="camera">Camera to draw with.</param>
+        void SetupCamera(Camera camera);
+
+        /// <summary>
         /// Sets render Target to the Device.
         /// </summary>
         /// <param name="index">Index of the Render Target.</param>
@@ -47,7 +53,8 @@ namespace GraphicsEngine
         /// <typeparam name="VertexType">Type of Vertices.</typeparam>
         /// <param name="vertices">Vertices to create Buffer from.</param>
         /// <returns>Vertex Buffer Instance.</returns>
-        VertexBuffer CreateVertexBuffer<VertexType>(IEnumerable<VertexType> vertices);
+        VertexBufferBase CreateVertexBuffer<VertexType>(IEnumerable<VertexType> vertices)
+            where VertexType : IVertex;
 
         /// <summary>
         /// Creates an Index Buffer.
@@ -55,7 +62,7 @@ namespace GraphicsEngine
         /// <typeparam name="IndexType">Type of Indices.</typeparam>
         /// <param name="indices">Indices to create Buffer from.</param>
         /// <returns>Index Buffer Instance.</returns>
-        IndexBuffer CreateIndexBuffer<IndexType>(IEnumerable<IndexType> indices);
+        IndexBufferBase CreateIndexBuffer<IndexType>(IEnumerable<IndexType> indices);
 
         /// <summary>
         /// Creates a Texture to render to.
