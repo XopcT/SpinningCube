@@ -93,7 +93,7 @@ namespace GraphicsEngine.Direct3D9
         {
             Matrix view = Matrix.LookAtLH(
                 new Vector3(camera.PositionX, camera.PositionY, camera.PositionZ),
-                new Vector3(0.0f, 0.0f, 0.0f),
+                new Vector3(camera.TargetX, camera.TargetY, camera.TargetZ),
                 Vector3.Up);
             Matrix projection = Matrix.PerspectiveFovLH(camera.Fov, camera.AspectRatio, camera.NearPlane, camera.FarPlane);
             this.view = view;
